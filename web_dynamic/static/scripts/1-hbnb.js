@@ -1,6 +1,6 @@
 $(document).ready(function() {
   let selectedAmenities = [];
-  $('input[type="checkbox"]').change(function() {
+  $(document).on('change', 'input[type="checkbox"]', function() {
     let amenityID = $(this).data('id');
     if ($(this).prop('checked')) {
       selectedAmenities.push(amenityID);
@@ -10,3 +10,4 @@ $(document).ready(function() {
     $('div.Amenities h4').text('Selected Amenities: ' + selectedAmenities.join(', '));
   });
 });
+
