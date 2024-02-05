@@ -1,6 +1,7 @@
 $(document).ready(function() {
   let selectedAmenities = [];
   let selectedAmenitiesNames = [];
+  let selectedAmenitiesText = "";
   $(document).on('change', 'input[type="checkbox"]', function() {
     let amenityID = $(this).data('id');
     let amenityName = $(this).data('name');
@@ -11,7 +12,12 @@ $(document).ready(function() {
       selectedAmenities = selectedAmenities.filter(id => id !== amenityID);
       selectedAmenitiesNames = selectedAmenitiesNames.filter(name => name !== amenityName);
     }
-    $('div.amenities h4').text(selectedAmenitiesNames.join(', '));
+    console.log(selectedAmenitiesNames.length);
+    if (selectedAmenitiesNames.length > 3) {
+      selectedAmenitiesText = `${selectedAmenitiesNames[0]}, ${selectedAmenitiesNames[1]}, ${selectedAmenitiesNames[2]}, ${selectedAmenitiesNames[3][0]}...`;
+    } else {
+      selectedAmenitiesText = selectedAmenitiesNames.join(', ');
+    }
+    $('div.amenities h4').text(selectedAmenitiesText);
   });
 });
-
