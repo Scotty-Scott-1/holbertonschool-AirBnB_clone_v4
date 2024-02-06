@@ -2,6 +2,7 @@ $(document).ready(function() {
   let selectedAmenities = [];
   let selectedAmenitiesNames = [];
   let selectedAmenitiesText = "";
+  let myPlaceList = [];
   $.ajax({
     type: 'GET',
     url: 'http://127.0.0.1:5001/api/v1/status/',
@@ -49,6 +50,7 @@ $(document).ready(function() {
       console.error('Error fetching places data:', error);
     }
   });
+
   $(document).on('change', 'input[type="checkbox"]', function() {
     let amenityID = $(this).data('id');
     let amenityName = $(this).data('name');
@@ -59,7 +61,6 @@ $(document).ready(function() {
       selectedAmenities = selectedAmenities.filter(id => id !== amenityID);
       selectedAmenitiesNames = selectedAmenitiesNames.filter(name => name !== amenityName);
     }
-    console.log(selectedAmenitiesNames.length);
     if (selectedAmenitiesNames.length > 3) {
       selectedAmenitiesText = `${selectedAmenitiesNames[0]}, ${selectedAmenitiesNames[1]}, ${selectedAmenitiesNames[2]}, ${selectedAmenitiesNames[3][0]}...`;
     } else {
@@ -67,10 +68,43 @@ $(document).ready(function() {
     }
     $('div.amenities h4').text(selectedAmenitiesText);
   });
+
+
   $(document).ready(() => {
     $('#btn').click(() => {
-      for (amenityId in selectedAmenities)
-        console.log(amenityId);
-    });
+      for (amenityId2 of selectedAmenities) {
+        console.log(amenityId2);
+      }
+      $.ajax({
+        type: 'POST',
+        url: 'http://127.0.0.1:5001/api/v1/places_search/',
+        contentType: 'application/json',
+        data: JSON.stringify({}),
+        success: function(placesData) {
+          console.log(placesData);
+          for (ob of placesData) {
+            myPlaceList.push(ob.id);
+          }
+
+          console.log(myPlaceList);
+      }
+
+      });
+
+      $.ajax({
+        type: 'GET',
+        url: 'http://127.0.0.1:5001/api/v1/places_amenities/places/02d9a2b5-7dca-423f-8406-707bc76abf7e/amenities',
+        contentType: 'application/json',
+        data: JSON.stringify({}),
+        success: function(amenitiesData) {
+          console.log(amenitiesData);
+      }
+
+      });
+
+
+
+
+});
 });
 });
