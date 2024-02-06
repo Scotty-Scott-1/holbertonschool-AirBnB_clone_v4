@@ -25,8 +25,6 @@ $(document).ready(function() {
     success: function(placesData) {
       // Loop through placesData and create article tags
       for (const place of placesData) {
-        let amenitiesList = place.amenities.map(amenity => amenity.name).join(', ');
-
         // Create article tag
         let article = `
           <article>
@@ -40,7 +38,6 @@ $(document).ready(function() {
               <div class="number_bathrooms">${place.number_bathrooms} Bathroom${place.number_bathrooms !== 1 ? 's' : ''}</div>
             </div>
             <div class="description">${place.description}</div>
-            <div class="amenities">${amenitiesList}</div>
           </article>
         `;
 
