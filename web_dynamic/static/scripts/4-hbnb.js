@@ -1,29 +1,30 @@
-$(document).ready(function() {
+$(document).ready(() => {
   let selectedAmenities = [];
   let selectedAmenitiesNames = [];
   let selectedAmenitiesText = "";
-  let myPlaceList = [];
+
   $.ajax({
     type: 'GET',
     url: 'http://127.0.0.1:5001/api/v1/status/',
-    success: function(data) {
+    success: function (data) {
       if (data.status === 'OK') {
         $('#api_status').addClass('available');
       } else {
         $('#api_status').removeClass('available');
       }
     },
-    error: function(error) {
+    error: function (error) {
       console.error('Erreur lors de la récupération du statut de l\'API :', error);
     }
   });
+
   // Request to fetch places data
   $.ajax({
     type: 'POST',
     url: 'http://127.0.0.1:5001/api/v1/places_search/',
     contentType: 'application/json',
     data: JSON.stringify({}),
-    success: function(placesData) {
+    success: function (placesData) {
       // Loop through placesData and create article tags
       for (const place of placesData) {
         // Create article tag
@@ -46,12 +47,12 @@ $(document).ready(function() {
         $('section.places').append(article);
       }
     },
-    error: function(error) {
+    error: function (error) {
       console.error('Error fetching places data:', error);
     }
   });
 
-  $(document).on('change', 'input[type="checkbox"]', function() {
+  $(document).on('change', 'input[type="checkbox"]', function () {
     let amenityID = $(this).data('id');
     let amenityName = $(this).data('name');
     if ($(this).prop('checked')) {
@@ -69,42 +70,44 @@ $(document).ready(function() {
     $('div.amenities h4').text(selectedAmenitiesText);
   });
 
-
-  $(document).ready(() => {
-    $('#btn').click(() => {
-      for (amenityId2 of selectedAmenities) {
-        console.log(amenityId2);
-      }
-      $.ajax({
-        type: 'POST',
-        url: 'http://127.0.0.1:5001/api/v1/places_search/',
-        contentType: 'application/json',
-        data: JSON.stringify({}),
-        success: function(placesData) {
-          console.log(placesData);
-          for (ob of placesData) {
-            myPlaceList.push(ob.id);
-          }
-
-          console.log(myPlaceList);
-      }
-
+  // Click event for the button
+  $('#btn').click(() => {
+    // Fetch places data based on selected amenities
+    fetch('http://127.0.0.1:5001/api/v1/places_search/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        amenities: selectedAmenities
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        $('section.places').empty();
+        for (let i = 0; i < data.length; i++) {
+          let place = data[i];
+          let article = $(
+            `<article>
+              <div class="title_box">
+                <h2>${place.name}</h2>
+                <div class="price_by_night">$${place.price_by_night}</div>
+              </div>
+              <div class="information">
+                <div class="max_guest">${place.max_guest} Guest${place.max_guest != 1 ? 's' : ''}</div>
+                <div class="number_rooms">${place.number_rooms} Bedroom${place.number_rooms != 1 ? 's' : ''}</div>
+                <div class="number_bathrooms">${place.number_bathrooms} Bathroom${place.number_bathrooms != 1 ? 's' : ''}</div>
+              </div>
+              <div class="description">
+                ${place.description}
+              </div>
+            </article>`
+          );
+          $('section.places').append(article);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching places data:', error);
       });
-
-      $.ajax({
-        type: 'GET',
-        url: 'http://127.0.0.1:5001/api/v1/places_amenities/places/02d9a2b5-7dca-423f-8406-707bc76abf7e/amenities',
-        contentType: 'application/json',
-        data: JSON.stringify({}),
-        success: function(amenitiesData) {
-          console.log(amenitiesData);
-      }
-
-      });
-
-
-
-
-});
-});
+  });
 });
