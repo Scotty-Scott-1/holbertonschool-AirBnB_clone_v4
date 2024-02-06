@@ -2,6 +2,20 @@ $(document).ready(function() {
   let selectedAmenities = [];
   let selectedAmenitiesNames = [];
   let selectedAmenitiesText = "";
+  $.ajax({
+    type: 'GET',
+    url: 'http://127.0.0.1:5001/api/v1/status/',
+    success: function(data) {
+      if (data.status === 'OK') {
+        $('#api_status').addClass('available');
+      } else {
+        $('#api_status').removeClass('available');
+      }
+    },
+    error: function(error) {
+      console.error('Erreur lors de la récupération du statut de l\'API :', error);
+    }
+  });
   $(document).on('change', 'input[type="checkbox"]', function() {
     let amenityID = $(this).data('id');
     let amenityName = $(this).data('name');
