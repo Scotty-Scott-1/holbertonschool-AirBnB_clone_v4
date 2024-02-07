@@ -1,10 +1,10 @@
-$(document).ready(function() {
+$(document).ready(function () {
   let selectedAmenities = [];
   let selectedAmenitiesNames = [];
-  let selectedAmenitiesText = "";
-  $(document).on('change', 'input[type="checkbox"]', function() {
-    let amenityID = $(this).data('id');
-    let amenityName = $(this).data('name');
+  let selectedAmenitiesText = '';
+  $(document).on('change', 'input[type="checkbox"]', function () {
+    const amenityID = $(this).data('id');
+    const amenityName = $(this).data('name');
     if ($(this).prop('checked')) {
       selectedAmenities.push(amenityID);
       selectedAmenitiesNames.push(amenityName);

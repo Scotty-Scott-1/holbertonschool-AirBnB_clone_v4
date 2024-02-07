@@ -1,18 +1,18 @@
-$(document).ready(function() {
+$(document).ready(function () {
   let selectedAmenities = [];
   let selectedAmenitiesNames = [];
-  let selectedAmenitiesText = "";
+  let selectedAmenitiesText = '';
   $.ajax({
     type: 'GET',
     url: 'http://127.0.0.1:5001/api/v1/status/',
-    success: function(data) {
+    success: function (data) {
       if (data.status === 'OK') {
         $('#api_status').addClass('available');
       } else {
         $('#api_status').removeClass('available');
       }
     },
-    error: function(error) {
+    error: function (error) {
       console.error('Erreur lors de la récupération du statut de l\'API :', error);
     }
   });
@@ -22,11 +22,11 @@ $(document).ready(function() {
     url: 'http://127.0.0.1:5001/api/v1/places_search/',
     contentType: 'application/json',
     data: JSON.stringify({}),
-    success: function(placesData) {
+    success: function (placesData) {
       // Loop through placesData and create article tags
       for (const place of placesData) {
         // Create article tag
-        let article = `
+        const article = `
           <article>
             <div class="title_box">
               <h2>${place.name}</h2>
@@ -45,13 +45,13 @@ $(document).ready(function() {
         $('section.places').append(article);
       }
     },
-    error: function(error) {
+    error: function (error) {
       console.error('Error fetching places data:', error);
     }
   });
-  $(document).on('change', 'input[type="checkbox"]', function() {
-    let amenityID = $(this).data('id');
-    let amenityName = $(this).data('name');
+  $(document).on('change', 'input[type="checkbox"]', function () {
+    const amenityID = $(this).data('id');
+    const amenityName = $(this).data('name');
     if ($(this).prop('checked')) {
       selectedAmenities.push(amenityID);
       selectedAmenitiesNames.push(amenityName);
