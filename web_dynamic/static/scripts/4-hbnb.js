@@ -25,6 +25,7 @@ $(document).ready(function() {
     data: JSON.stringify({}),
     success: function(placesData) {
       // Loop through placesData and create article tags
+      $('section.places').empty();
       for (const place of placesData) {
         // Create article tag
         let article = `
@@ -75,34 +76,43 @@ $(document).ready(function() {
       for (amenityId2 of selectedAmenities) {
         console.log(amenityId2);
       }
+
+
       $.ajax({
         type: 'POST',
         url: 'http://127.0.0.1:5001/api/v1/places_search/',
         contentType: 'application/json',
-        data: JSON.stringify({}),
+        data: JSON.stringify({amenities: selectedAmenities}),
         success: function(placesData) {
-          console.log(placesData);
-          for (ob of placesData) {
-            myPlaceList.push(ob.id);
-          }
+      // Loop through placesData and create article tags
+      $('section.places').empty();
+      console.log("the return value of the function is; ");
+      console.log(placesData);
+      for (const place of placesData) {
+        // Create article tag
+        let article = `
+          <article>
+            <div class="title_box">
+              <h2>${place.name}</h2>
+              <div class="price_by_night">$${place.price_by_night}</div>
+            </div>
+            <div class="information">
+              <div class="max_guest">${place.max_guest} Guest${place.max_guest !== 1 ? 's' : ''}</div>
+              <div class="number_rooms">${place.number_rooms} Bedroom${place.number_rooms !== 1 ? 's' : ''}</div>
+              <div class="number_bathrooms">${place.number_bathrooms} Bathroom${place.number_bathrooms !== 1 ? 's' : ''}</div>
+            </div>
+            <div class="description">${place.description}</div>
+          </article>
+        `;
 
-          console.log(myPlaceList);
+        // Append the article to section.places
+        $('section.places').append(article);
       }
-
-      });
-
-      $.ajax({
-        type: 'GET',
-        url: 'http://127.0.0.1:5001/api/v1/places_amenities/places/02d9a2b5-7dca-423f-8406-707bc76abf7e/amenities',
-        contentType: 'application/json',
-        data: JSON.stringify({}),
-        success: function(amenitiesData) {
-          console.log(amenitiesData);
-      }
-
-      });
-
-
+    },
+    error: function(error) {
+      console.error('Error fetching places data:', error);
+    }
+  });
 
 
 });
